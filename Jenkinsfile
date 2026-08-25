@@ -35,5 +35,15 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh '''
+                    sed "s|\${BUILD_NUMBER}|${BUILD_NUMBER}|g" k8s/deployment.yaml | kubectl apply -f -
+                    kubectl apply -f k8s/service.yaml
+                    kubectl rollout status deployment/devops-capstone 
+                '''
+            }
+        }
     }
 }
