@@ -1,9 +1,11 @@
-  apiVersion: apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: devops-capstone
+
 spec:
   replicas: 2
+
   selector:
     matchLabels:
       app: devops-capstone
@@ -16,6 +18,6 @@ spec:
     spec:
       containers:
         - name: devops-capstone
-          image: yuki982/devops-capstone:${BUILD_NUMBER}
+          image: yuki982/devops-capstone:latest
           ports:
             - containerPort: 5000

@@ -39,8 +39,12 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 sh '''
-                    sed 's|${BUILD_NUMBER}|'"${BUILD_NUMBER}"'|g' k8s/deployment.yaml | kubectl apply -f -
+                    kubectl apply -f k8s/deployment.yaml
                     kubectl apply -f k8s/service.yaml
+
+                    kubectl set image deployment/devops-capstone \
+                    devops-capstone=yuki982/devops-capstone:${BUILD_NUMBER}
+
                     kubectl rollout status deployment/devops-capstone
                 '''
             }
