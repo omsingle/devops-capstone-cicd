@@ -2,12 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage ('checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage ('test') {
             steps {
                 sh '''
@@ -15,6 +9,14 @@ pipeline {
                     . venv/bin/activate
                     pip install -r requirements.txt
                     pytest -v
+                '''
+            }
+        }
+
+        stage ('build') {
+            steps {
+                sh '''
+                    docker build -t devops-capstone:${BUILD_NUMBER} .
                 '''
             }
         }
