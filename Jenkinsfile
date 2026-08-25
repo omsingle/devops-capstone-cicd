@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage ('test') {
+        stage('Test') {
             steps {
                 sh '''
                     python3 -m venv venv
@@ -13,27 +13,27 @@ pipeline {
             }
         }
 
-        stage ('build') {
+        stage('Build Docker Image') {
             steps {
                 sh '''
-                    docker build -t devops-capstone:${BUILD_NUMBER} .
+                    docker build -t yuki982/devops-capstone:${BUILD_NUMBER} .
                 '''
             }
         }
 
-        stage ('push to dockerhub') {
+        stage('Push to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-creds', 
-                    usernameVariable: 'DOCKER_USERNAME', 
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USERNAME',
                     passwordVariable: 'DOCKER_PASSWORD'
                 )]) {
                     sh '''
-                        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
                         docker push yuki982/devops-capstone:${BUILD_NUMBER}
                     '''
                 }
             }
-        }   
+        }
     }
 }
